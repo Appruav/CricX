@@ -1,0 +1,241 @@
+============================================================
+  COLUMN DICTIONARY
+  Dataset : ipl_male_ball_by_ball.csv
+  Source  : cricsheet.org
+  Columns : 63
+============================================================
+
+------------------------------------------------------------
+  MATCH IDENTITY
+------------------------------------------------------------
+
+  match_id                 [string]
+  Unique identifier for the match, derived from the CricSheet JSON filename (e.g. 1234567).
+
+  date                     [string]
+  Date of the first day of the match in YYYY-MM-DD format.
+
+  day                      [integer]
+  Day of the month extracted from the match date.
+
+  month                    [integer]
+  Month number (1-12) extracted from the match date.
+
+  year                     [integer]
+  Four-digit year extracted from the match date.
+
+  season                   [string]
+  Season label as recorded in the source data (e.g. '2023/24' or '2024').
+
+  match_type               [string]
+  Format of the match: 'Test', 'ODI', 'T20', etc.
+
+  match_number             [string]
+  Sequential number assigned to the match within its series or tournament (if available).
+
+  gender                   [string]
+  Gender category of the match: 'male' or 'female'.
+
+  team_type                [string]
+  Whether the competing sides are international teams or club/franchise sides.
+
+  balls_per_over           [integer]
+  Number of legal deliveries per over (almost always 6).
+
+  overs                    [integer]
+  Maximum overs per innings for limited-overs matches; blank for Tests.
+
+------------------------------------------------------------
+  VENUE & EVENT
+------------------------------------------------------------
+
+  venue                    [string]
+  Name of the ground where the match was played.
+
+  city                     [string]
+  City in which the venue is located.
+
+  event_name               [string]
+  Name of the tournament or series (e.g. 'Indian Premier League').
+
+  event_match_no           [string]
+  Match number within the event (e.g. 'Final', '1', '23').
+
+  stage                    [string]
+  Stage of the tournament (e.g. 'Super 12', 'Semi-Final', 'Final').
+
+------------------------------------------------------------
+  INNINGS & BALL
+------------------------------------------------------------
+
+  innings                  [integer]
+  Innings number within the match (1-2 for limited-overs; 1-4 for Tests). Values 3+ in limited-overs indicate Super Over innings.
+
+  batting_team             [string]
+  Full name of the team currently batting.
+
+  bowling_team             [string]
+  Full name of the team currently bowling.
+
+  over                     [integer]
+  Zero-indexed over number (0 = first over, 19 = last over of a T20).
+
+  ball                     [integer]
+  Legal-ball count within the current over (1-6, or more if wides/no-balls reset it).
+
+  ball_no                  [float]
+  Composite ball reference: over + ball/10 (e.g. 4.3 = 3rd legal ball of the 5th over).
+
+  valid_ball               [integer]
+  1 if this delivery counts as a legal ball (not a wide or no-ball), else 0.
+
+  balls_faced              [integer]
+  1 if the batter faced this ball (0 for wides, which don't count against the batter).
+
+  extra_type               [string]
+  Comma-separated list of extra types on this delivery. Empty string for a clean delivery.
+
+------------------------------------------------------------
+  BATTER
+------------------------------------------------------------
+
+  batter                   [string]
+  Name of the batter on strike for this delivery.
+
+  bat_pos                  [integer]
+  Batting position of the striker in this innings (1 = opener).
+
+  runs_batter              [integer]
+  Runs scored by the batter off this delivery (excludes extras).
+
+  batter_runs              [integer]
+  Cumulative runs scored by the batter in this innings up to and including this delivery.
+
+  batter_balls             [integer]
+  Cumulative balls faced by the batter in this innings up to and including this delivery.
+
+  non_striker              [string]
+  Name of the batter at the non-striker's end.
+
+  non_striker_pos          [integer]
+  Batting position of the non-striker in this innings.
+
+  batting_partners         [string]
+  Alphabetically sorted partnership pair: 'PlayerA|PlayerB'.
+
+  new_batter               [string]
+  Name of the batter who came in after a wicket on this delivery, if any. None otherwise.
+
+------------------------------------------------------------
+  BOWLER
+------------------------------------------------------------
+
+  bowler                   [string]
+  Name of the bowler delivering this ball.
+
+  runs_bowler              [integer]
+  Runs charged to the bowler's economy: batter runs + wides + no-ball runs (excludes byes and leg-byes).
+
+  bowler_wicket            [integer]
+  1 if the bowler is credited with this wicket (not a run-out, retired hurt, or obstruction), else 0.
+
+------------------------------------------------------------
+  RUNS
+------------------------------------------------------------
+
+  runs_extras              [integer]
+  Total extras (wides, no-balls, byes, leg-byes, penalties) on this delivery.
+
+  runs_total               [integer]
+  Total runs off this delivery: batter runs + extras.
+
+  runs_not_boundary        [boolean]
+  True when the batter's runs came from running, not a boundary.
+
+------------------------------------------------------------
+  WICKET
+------------------------------------------------------------
+
+  wicket_kind              [string]
+  Method of dismissal (e.g. 'caught', 'bowled', 'lbw', 'run out'). Empty string if no wicket.
+
+  player_out               [string]
+  Name of the batter who was dismissed on this delivery. Empty if no wicket.
+
+  striker_out              [integer]
+  1 if the player dismissed is the batter on strike, 0 if it's the non-striker.
+
+  fielders                 [string]
+  Comma-separated names of fielders involved in the dismissal.
+
+------------------------------------------------------------
+  TEAM SCORE STATE
+------------------------------------------------------------
+
+  team_runs                [integer]
+  Cumulative runs scored by the batting team in this innings up to and including this delivery.
+
+  team_balls               [integer]
+  Cumulative legal balls faced by the batting team in this innings up to and including this delivery.
+
+  team_wicket              [integer]
+  Cumulative wickets fallen in this innings up to and including this delivery.
+
+  runs_target              [integer]
+  Target runs set for the chasing team. None in the first innings.
+
+  power_surge_start        [integer]
+  Over number at which the batting powerplay begins, if applicable. None otherwise.
+
+------------------------------------------------------------
+  MATCH RESULT
+------------------------------------------------------------
+
+  match_won_by             [string]
+  Name of the team that won the match. 'Unknown' if no result.
+
+  win_outcome              [string]
+  Margin of victory (e.g. '6 wickets', '45 runs'). Empty for ties or no-results.
+
+  result_type              [string]
+  Outcome category when there is no winner: 'tie', 'no result', 'draw', or 'NA'.
+
+  method                   [string]
+  Method used to calculate a revised target (e.g. 'D/L'). 'NA' if not applicable.
+
+  superover_winner         [string]
+  Name of the team that won a Super Over. 'NA' if there was no Super Over.
+
+  player_of_match          [string]
+  Name of the player awarded Player of the Match.
+
+------------------------------------------------------------
+  TOSS
+------------------------------------------------------------
+
+  toss_winner              [string]
+  Name of the team that won the toss.
+
+  toss_decision            [string]
+  Decision made by the toss winner: 'bat' or 'field'.
+
+------------------------------------------------------------
+  DRS REVIEW
+------------------------------------------------------------
+
+  review_batter            [string]
+  Name of the batter involved in a DRS review on this delivery. Empty if no review.
+
+  team_reviewed            [string]
+  Name of the team that requested the DRS review.
+
+  review_decision          [string]
+  Outcome of the review: 'upheld' or 'overturned'.
+
+  umpire                   [string]
+  Name of the on-field umpire whose decision was reviewed.
+
+  umpires_call             [boolean]
+  True when the review resulted in an umpire's call.
+
+============================================================

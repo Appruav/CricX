@@ -1,1 +1,12 @@
-Lets choose ipynb file instead of standard python file as any change in standard python file will load the dataset again and again, in ipynb we go by the cells so csv will be imported at the top and stays there in the ram
+1.Lets choose ipynb file instead of standard python file as any change in standard python file will load the dataset again and again, in ipynb we go by the cells so csv will be imported at the top and stays there in the ram
+
+2.Need to setup a virtual env to run the python because kali blocks it .
+
+3.Python cannot natively import code from a .ipynb file. 
+
+
+4.Because we are importing code across nested directories (FORMAT/IPL/), Python needs a tiny hint to know these folders are a package.
+
+Inside FORMAT/
+
+Inside FORMAT/IPL/
