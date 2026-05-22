@@ -186,15 +186,16 @@ def get_team_toss_stats(team_name):
     return pd.DataFrame(toss_summary)
 
 
+
 def get_team_venue_stats(team_name):
     """
-    Analyzes a team's win/loss record across all IPL grounds, 
-    returning a performance table sorted by Win % in descending order.
+    Analyzes a team's win/loss record across IPL grounds.
+    Extracts only the core stadium name before the comma to handle duplicates automatically.
     """
     # 1. Isolate unique matches
     unique_matches = df_ipl.drop_duplicates('match_id')
     
-    # 2. Filter matches where the team actually played (either batting or bowling first)
+    # 2. Filter matches where the team actually played
     team_matches = unique_matches[
         (unique_matches['batting_team'] == team_name) | 
         (unique_matches['bowling_team'] == team_name)
@@ -206,8 +207,16 @@ def get_team_venue_stats(team_name):
         
     # 3. Create a binary tracker column for a victory
     team_matches['is_win'] = (team_matches['match_won_by'] == team_name).astype(int)
+
+    # team_matches['venue'] = team_matches['venue'].str.replace(r'.*Chinnaswamy.*', 'M Chinnaswamy Stadium', regex=True, case=False)
+    # team_matches['venue'] = team_matches['venue'].str.replace(r'.*Chidambaram.*', 'MA Chidambaram Stadium', regex=True, case=False)
+    # team_matches['venue'] = team_matches['venue'].str.replace(r'.*Bindra.*', 'IS Bindra Stadium', regex=True, case=False)
+    # team_matches['venue'] = team_matches['venue'].str.replace(r'.*Arun Jaitley.*', 'Arun Jaitley Stadium', regex=True, case=False)
     
-    # 4. Group by venue and calculate records
+    # 🚀 THE STRING CLEANER: Extract only the stadium name before the first comma
+    team_matches['venue'] = team_matches['venue'].str.split(',').str[0].str.strip()
+    
+    # 4. Group by the cleaned stadium name and calculate aggregates
     venue_summary = team_matches.groupby('venue').agg(
         Played=('match_id', 'count'),
         Won=('is_win', 'sum')
@@ -216,7 +225,7 @@ def get_team_venue_stats(team_name):
     venue_summary['Lost'] = venue_summary['Played'] - venue_summary['Won']
     venue_summary['Win %'] = ((venue_summary['Won'] / venue_summary['Played']) * 100).round(2)
     
-    # 5. Sort by Win % descending, using matches Played as a secondary tie-breaker
+    # 5. Sort by Win % descending, using matches Played ascending as tie-breaker
     final_table = venue_summary.sort_values(
         by=['Win %', 'Played'], 
         ascending=[False, True]
